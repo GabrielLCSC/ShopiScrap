@@ -1,0 +1,22 @@
+// Exemple de middleware pour protéger des routes
+// Renommez ce fichier en "middleware.ts" pour l'activer
+
+import { auth } from "@/auth"
+import { NextResponse } from "next/server"
+
+export default auth((req) => {
+  const isLoggedIn = !!req.auth
+  const isProtectedRoute = req.nextUrl.pathname.startsWith("/protected")
+
+  if (isProtectedRoute && !isLoggedIn) {
+    return NextResponse.redirect(new URL("/", req.url))
+  }
+
+  return NextResponse.next()
+})
+
+// Configuration du matcher pour spécifier les routes à protéger
+export const config = {
+  matcher: ["/protected/:path*"],
+}
+
