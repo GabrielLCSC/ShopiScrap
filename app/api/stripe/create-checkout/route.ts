@@ -60,8 +60,8 @@ export async function POST(request: Request) {
           quantity: 1,
         },
       ],
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/billing`,
+      success_url: `${process.env.NEXTAUTH_URL}/dashboard`,
+      cancel_url: `${process.env.NEXTAUTH_URL}/billing`,
       metadata: {
         userId: user.id,
         planType: planType,
