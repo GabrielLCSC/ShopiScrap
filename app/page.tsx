@@ -122,7 +122,7 @@ export default function Home() {
                 </svg>
               </div>
               <div>
-                <h4 className="font-semibold text-slate-700 mb-1">ROI immédiat sur chaque extraction</h4>
+                <h4 className="font-semibold text-slate-700 mb-1">Chaque extraction peut devenir du profit</h4>
                 <p className="text-slate-600">
                   Chaque scraping peut révéler un produit gagnant, un angle créatif ou une opportunité de marché. Le retour sur investissement est ridicule.
                 </p>
