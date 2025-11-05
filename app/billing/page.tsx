@@ -35,7 +35,7 @@ export default async function BillingPage() {
       period: "one-time",
       features: [
         "50 extractions",
-        "Crédits persistants (jamais expirés)",
+        "Crédits persistants",
         "Parfait pour un besoin ponctuel",
         "Accès immédiat",
       ],
@@ -145,7 +145,7 @@ export default async function BillingPage() {
             {user.subscriptionEndDate && new Date(user.subscriptionEndDate) > new Date() && (
               <div className="mt-4 p-3 bg-blue-50 rounded-lg text-center">
                 <p className="text-sm text-blue-800">
-                  {user.subscriptionType === "day_pass" ? "Day Pass" : "Abonnement"} actif jusqu&apos;au{" "}
+                  Abonnement actif jusqu&apos;au{" "}
                   <span className="font-semibold">
                     {new Date(user.subscriptionEndDate).toLocaleDateString("fr-FR", {
                       day: "numeric",

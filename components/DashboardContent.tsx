@@ -331,14 +331,11 @@ export default function DashboardContent() {
                 <p className="text-sm font-medium text-gray-600">
                   {subscriptionType === "pro" ? "Plan Pro - Illimité" :
                    subscriptionType === "monthly" ? "Plan Monthly" :
-                   subscriptionType === "day_pass" ? "Day Pass" :
-                   "Crédits gratuits"}
+                   "Crédits"}
                 </p>
                 {subscriptionType !== "free" && (
                   <span className="px-2 py-0.5 rounded-full bg-linear-to-r from-[#7BB5D8] to-[#E0BBE4] text-white text-xs font-semibold">
-                    {subscriptionType === "pro" ? "PRO" : 
-                     subscriptionType === "monthly" ? "MONTHLY" : 
-                     "DAY PASS"}
+                    {subscriptionType === "pro" ? "PRO" : "MONTHLY"}
                   </span>
                 )}
               </div>

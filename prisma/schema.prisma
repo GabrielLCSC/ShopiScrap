@@ -35,8 +35,8 @@ model User {
   totalCreditsUsed Int    @default(0) // Statistique totale
   
   // Abonnements
-  subscriptionType String @default("free") // "free" | "day_pass" | "monthly" | "pro"
-  subscriptionEndDate DateTime? // Fin de l'abonnement (day pass ou mensuel)
+  subscriptionType String @default("free") // "free" | "monthly" | "pro" (day_pass deprecated - now just credits)
+  subscriptionEndDate DateTime? // Fin de l'abonnement (monthly ou pro)
   stripeCustomerId String? // ID client Stripe
   stripeSubscriptionId String? // ID abonnement Stripe (pour monthly/pro)
   

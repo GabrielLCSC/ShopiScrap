@@ -154,7 +154,7 @@ export default function PricingCard({ plan, currentPlan, isLoggedIn }: PricingCa
         ) : isCurrentPlan ? (
           "Plan actuel"
         ) : plan.id === "day_pass" ? (
-          "Acheter le Day Pass"
+          "Acheter le pack"
         ) : (
           "S'abonner maintenant"
         )}
