@@ -4,12 +4,10 @@ import { useSession, signOut } from "next-auth/react"
 import { useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import AuthModal from "./AuthModal"
 
 export default function AuthButton() {
   const { data: session, status } = useSession()
   const [isOpen, setIsOpen] = useState(false)
-  const [isModalOpen, setIsModalOpen] = useState(false)
 
   if (status === "loading") {
     return (
@@ -95,15 +93,11 @@ export default function AuthButton() {
   }
 
   return (
-    <>
-      <button
-        onClick={() => setIsModalOpen(true)}
-        className="px-6 py-3 rounded-xl gradient-blue text-white text-sm font-bold shadow-lg hover:shadow-xl hover:brightness-110 transition-all duration-300"
-      >
-        Se connecter
-      </button>
-
-      <AuthModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
-    </>
+    <Link
+      href="/login"
+      className="px-6 py-3 rounded-xl gradient-blue text-white text-sm font-bold shadow-lg hover:shadow-xl hover:brightness-110 transition-all duration-300"
+    >
+      Se connecter
+    </Link>
   )
 }

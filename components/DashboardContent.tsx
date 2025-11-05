@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react"
 import { useSession } from "next-auth/react"
 import Image from "next/image"
 import ExportDropdown from "./ExportDropdown"
-import AuthModal from "./AuthModal"
+import Link from "next/link"
 
 interface ScrapedData {
   id: string
@@ -30,7 +30,6 @@ export default function DashboardContent() {
   const [subscriptionType, setSubscriptionType] = useState<string>("free")
   const [trialRemaining, setTrialRemaining] = useState<number | null>(null)
   const [isTrial, setIsTrial] = useState(false)
-  const [isModalOpen, setIsModalOpen] = useState(false)
   const resultRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -296,8 +295,8 @@ export default function DashboardContent() {
               <p className="text-gray-700 mb-4 leading-relaxed">
                 ⚠️ <strong>Sans connexion</strong> : vos résultats ne seront pas sauvegardés et vous n&apos;aurez pas accès à l&apos;historique.
               </p>
-              <button
-                onClick={() => setIsModalOpen(true)}
+              <Link
+                href="/login"
                 className="px-6 py-3 rounded-xl gradient-blue text-white font-bold shadow-lg hover:shadow-xl hover:brightness-110 transition-all duration-300 flex items-center gap-2"
               >
                 <svg className="h-5 w-5" viewBox="0 0 24 24">
@@ -307,7 +306,7 @@ export default function DashboardContent() {
                   <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
                 </svg>
                 Se connecter pour tout débloquer
-              </button>
+              </Link>
             </div>
 
             {/* Compteur d'essais */}
@@ -482,12 +481,12 @@ export default function DashboardContent() {
               <div className="mb-6 glass rounded-2xl p-4 border-2 border-[#FFE5B4]">
                 <p className="text-sm text-center text-gray-700">
                   ⚠️ <strong>Mode essai</strong> : Ce résultat ne sera pas sauvegardé. 
-                  <button
-                    onClick={() => setIsModalOpen(true)}
+                  <Link
+                    href="/login"
                     className="ml-2 text-[#7BB5D8] font-bold hover:underline"
                   >
                     Connectez-vous pour sauvegarder
-                  </button>
+                  </Link>
                 </p>
               </div>
             )}
@@ -618,9 +617,6 @@ export default function DashboardContent() {
           </div>
         )
       })()}
-
-      {/* Modal de connexion */}
-      <AuthModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   )
 }

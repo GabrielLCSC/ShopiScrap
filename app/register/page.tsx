@@ -3,14 +3,9 @@
 import { useState } from "react"
 import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 
-interface AuthModalProps {
-  isOpen: boolean
-  onClose: () => void
-}
-
-export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
-  const [mode, setMode] = useState<"signin" | "signup">("signin")
+export default function RegisterPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [name, setName] = useState("")
@@ -18,58 +13,38 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
   const [loading, setLoading] = useState(false)
   const router = useRouter()
 
-  if (!isOpen) return null
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError("")
     setLoading(true)
 
     try {
-      if (mode === "signup") {
-        // Inscription
-        const res = await fetch("/api/auth/register", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password, name }),
-        })
+      // Inscription
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password, name }),
+      })
 
-        const data = await res.json()
+      const data = await res.json()
 
-        if (!res.ok) {
-          throw new Error(data.error || "Erreur lors de l'inscription")
-        }
-
-        // Connexion automatique après inscription
-        const result = await signIn("credentials", {
-          email,
-          password,
-          redirect: false,
-        })
-
-        if (result?.error) {
-          throw new Error("Erreur lors de la connexion")
-        }
-
-        router.push("/dashboard")
-        router.refresh()
-        onClose()
-      } else {
-        // Connexion
-        const result = await signIn("credentials", {
-          email,
-          password,
-          redirect: false,
-        })
-
-        if (result?.error) {
-          throw new Error("Email ou mot de passe incorrect")
-        }
-
-        router.push("/dashboard")
-        router.refresh()
-        onClose()
+      if (!res.ok) {
+        throw new Error(data.error || "Erreur lors de l'inscription")
       }
+
+      // Connexion automatique après inscription
+      const result = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      })
+
+      if (result?.error) {
+        throw new Error("Erreur lors de la connexion")
+      }
+
+      router.push("/dashboard")
+      router.refresh()
     } catch (err) {
       setError(err instanceof Error ? err.message : "Une erreur est survenue")
     } finally {
@@ -81,41 +56,24 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
     setLoading(true)
     try {
       await signIn("google", { callbackUrl: "/dashboard" })
-    } catch (err) {
+    } catch {
       setError("Erreur lors de la connexion avec Google")
       setLoading(false)
     }
   }
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
-      {/* Backdrop */}
-      <div
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-        onClick={onClose}
-      />
-
-      {/* Modal */}
-      <div className="relative glass rounded-3xl p-8 max-w-md w-full border border-white/30 animate-scale-in max-h-[90vh] overflow-y-auto">
-        {/* Close button */}
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition-colors"
-        >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-
+    <div className="min-h-full bg-linear-to-br from-[#FAFBFC] via-[#F0F4F8] to-[#E8EEF5] flex items-center justify-center p-4">
+      <div className="glass rounded-3xl p-8 max-w-md w-full border border-white/30 animate-scale-in">
         {/* Title */}
-        <h2 className="text-3xl font-bold mb-2 bg-linear-to-r from-[#7BB5D8] to-[#E0BBE4] bg-clip-text text-transparent">
-          {mode === "signin" ? "Connexion" : "Inscription"}
-        </h2>
-        <p className="text-slate-600 mb-6">
-          {mode === "signin"
-            ? "Connectez-vous pour accéder à votre compte"
-            : "Créez votre compte gratuitement"}
-        </p>
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold mb-2 bg-linear-to-r from-[#7BB5D8] to-[#E0BBE4] bg-clip-text text-transparent">
+            Inscription
+          </h1>
+          <p className="text-slate-600">
+            Créez votre compte gratuitement
+          </p>
+        </div>
 
         {/* Google Sign In */}
         <button
@@ -144,21 +102,19 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
-          {mode === "signup" && (
-            <div>
-              <label htmlFor="name" className="block text-sm font-medium text-slate-700 mb-2">
-                Nom (optionnel)
-              </label>
-              <input
-                id="name"
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#7BB5D8] focus:outline-none transition-colors"
-                placeholder="Votre nom"
-              />
-            </div>
-          )}
+          <div>
+            <label htmlFor="name" className="block text-sm font-medium text-slate-700 mb-2">
+              Nom (optionnel)
+            </label>
+            <input
+              id="name"
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#7BB5D8] focus:outline-none transition-colors"
+              placeholder="Votre nom"
+            />
+          </div>
 
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-2">
@@ -189,9 +145,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
               className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#7BB5D8] focus:outline-none transition-colors"
               placeholder="••••••••"
             />
-            {mode === "signup" && (
-              <p className="mt-1 text-xs text-slate-500">Minimum 8 caractères</p>
-            )}
+            <p className="mt-1 text-xs text-slate-500">Minimum 8 caractères</p>
           </div>
 
           {error && (
@@ -205,45 +159,35 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
             disabled={loading}
             className="w-full px-6 py-3 rounded-xl gradient-blue text-white font-semibold shadow-lg hover:shadow-xl hover:brightness-110 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading
-              ? "Chargement..."
-              : mode === "signin"
-              ? "Se connecter"
-              : "S'inscrire"}
+            {loading ? "Inscription..." : "S'inscrire"}
           </button>
         </form>
 
-        {/* Toggle mode */}
+        {/* Toggle to login */}
         <p className="mt-6 text-center text-sm text-slate-600">
-          {mode === "signin" ? (
-            <>
-              Pas encore de compte ?{" "}
-              <button
-                onClick={() => {
-                  setMode("signup")
-                  setError("")
-                }}
-                className="font-semibold text-[#7BB5D8] hover:underline"
-              >
-                S&apos;inscrire
-              </button>
-            </>
-          ) : (
-            <>
-              Déjà un compte ?{" "}
-              <button
-                onClick={() => {
-                  setMode("signin")
-                  setError("")
-                }}
-                className="font-semibold text-[#7BB5D8] hover:underline"
-              >
-                Se connecter
-              </button>
-            </>
-          )}
+          Déjà un compte ?{" "}
+          <Link
+            href="/login"
+            className="font-semibold text-[#7BB5D8] hover:underline"
+          >
+            Se connecter
+          </Link>
         </p>
+
+        {/* Back to home */}
+        <div className="mt-4 text-center">
+          <Link
+            href="/"
+            className="text-sm text-slate-500 hover:text-[#7BB5D8] transition-colors"
+          >
+            ← Retour à l&apos;accueil
+          </Link>
+        </div>
       </div>
+
+      {/* Floating decorative elements */}
+      <div className="fixed top-20 left-10 w-72 h-72 bg-[#A8D8EA]/20 rounded-full blur-3xl pointer-events-none animate-float" style={{animationDelay: '0s', animationDuration: '8s'}}></div>
+      <div className="fixed bottom-20 right-10 w-72 h-72 bg-[#E0BBE4]/20 rounded-full blur-3xl pointer-events-none animate-float" style={{animationDelay: '2s', animationDuration: '10s'}}></div>
     </div>
   )
 }
