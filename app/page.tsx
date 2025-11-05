@@ -82,7 +82,7 @@ export default function Home() {
               3
             </div>
             <h4 className="text-xl font-semibold text-slate-700 mb-3">
-              Exporte et lance
+              Exporte et utilise
             </h4>
             <p className="text-slate-600">
               Télécharge en JSON ou CSV. Intègre directement dans tes campagnes, tes outils ou ton business.
@@ -95,7 +95,7 @@ export default function Home() {
       <section className="mx-auto max-w-4xl px-4 py-16">
         <div className="glass rounded-2xl p-10 border border-white/30 animate-scale-in">
           <h3 className="text-2xl font-bold text-center mb-8 bg-linear-to-r from-[#7BB5D8] to-[#E0BBE4] bg-clip-text text-transparent">
-            Pourquoi les marketeurs choisissent ShopiScrap
+            Pourquoi choisir ShopiScrap
           </h3>
 
           <div className="space-y-6">
@@ -122,9 +122,9 @@ export default function Home() {
                 </svg>
               </div>
               <div>
-                <h4 className="font-semibold text-slate-700 mb-1">Chaque extraction peut devenir du profit</h4>
+                <h4 className="font-semibold text-slate-700 mb-1">ROI immédiat sur chaque extraction</h4>
                 <p className="text-slate-600">
-                  Chaque scraping peut révéler un produit gagnant, un angle créatif ou une opportunité de marché. Le retour sur investissement est ridicule.
+                  Chaque scraping peut révéler un produit gagnant, un angle créatif ou une opportunité de marché. Une seule découverte rentabilise l&apos;investissement.
                 </p>
               </div>
             </div>
