@@ -29,7 +29,7 @@ export default async function BillingPage() {
 
   const plans = [
     {
-      id: "day_pass",
+      id: "pack_credits",
       name: "Pack 50 Crédits",
       price: "4€",
       period: "one-time",
@@ -42,6 +42,7 @@ export default async function BillingPage() {
       credits: 50,
       stripePriceId: process.env.STRIPE_PACK_CREDITS_PRICE_ID!,
       highlighted: false,
+      planType: "day_pass", // Type interne pour Stripe (keep for webhook compatibility)
     },
     {
       id: "monthly",
@@ -57,6 +58,7 @@ export default async function BillingPage() {
       credits: 200,
       stripePriceId: process.env.STRIPE_MONTHLY_PRICE_ID!,
       highlighted: true,
+      planType: "monthly",
     },
     {
       id: "pro",
@@ -72,6 +74,7 @@ export default async function BillingPage() {
       credits: "Unlimited",
       stripePriceId: process.env.STRIPE_PRO_PRICE_ID!,
       highlighted: false,
+      planType: "pro",
     },
   ];
 
@@ -118,12 +121,12 @@ export default async function BillingPage() {
             <h3 className="text-xl font-semibold text-slate-900 mb-4">Votre compte</h3>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="text-center p-4 bg-white/50 rounded-lg border border-white/30">
-                <p className="text-sm text-slate-600 mb-1">Plan actuel</p>
-                <p className="text-2xl font-bold text-blue-600 capitalize">
-                  {user.subscriptionType.replace("_", " ")}
-                </p>
-              </div>
+            <div className="text-center p-4 bg-white/50 rounded-lg border border-white/30">
+              <p className="text-sm text-slate-600 mb-1">Plan actuel</p>
+              <p className="text-2xl font-bold text-blue-600 capitalize">
+                {user.subscriptionType === "day_pass" ? "Free" : user.subscriptionType.replace("_", " ")}
+              </p>
+            </div>
 
               <div className="text-center p-4 bg-white/50 rounded-lg border border-white/30">
                 <p className="text-sm text-slate-600 mb-1">Disponibles</p>
@@ -142,7 +145,7 @@ export default async function BillingPage() {
               </div>
             </div>
 
-            {user.subscriptionEndDate && new Date(user.subscriptionEndDate) > new Date() && (
+            {user.subscriptionType !== "day_pass" && user.subscriptionEndDate && new Date(user.subscriptionEndDate) > new Date() && (
               <div className="mt-4 p-3 bg-blue-50 rounded-lg text-center">
                 <p className="text-sm text-blue-800">
                   Abonnement actif jusqu&apos;au{" "}
@@ -251,7 +254,7 @@ export default async function BillingPage() {
               </summary>
               <div className="px-6 pb-6 animate-fade-in">
                 <p className="text-slate-600">
-                  Day Pass : Non, valable 24h uniquement. Monthly Starter : Non, réinitialisé chaque mois. 
+                  Pack 50 Crédits : Non, les crédits sont persistants à vie. Monthly Starter : Non, réinitialisé chaque mois. 
                   Gratuit : Réinitialisé quotidiennement.
                 </p>
               </div>

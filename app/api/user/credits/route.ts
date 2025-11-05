@@ -49,7 +49,26 @@ export async function GET() {
 
     const now = new Date()
 
-    // Day Pass n'expire plus - les crédits sont persistants
+    // Migration automatique : convertir les anciens "day_pass" vers "free" (garder les crédits)
+    if (user.subscriptionType === "day_pass") {
+      user = await prisma.user.update({
+        where: { email: session.user.email },
+        data: {
+          subscriptionType: "free",
+          subscriptionEndDate: null, // Supprimer l'expiration
+        },
+        select: {
+          credits: true,
+          lastFreeReset: true,
+          totalCreditsUsed: true,
+          subscriptionType: true,
+          subscriptionEndDate: true,
+          monthlyQuota: true,
+          monthlyUsed: true,
+          lastMonthlyReset: true,
+        }
+      })
+    }
 
     // Vérifier si abonnement (monthly/pro) est expiré
     if ((user.subscriptionType === "monthly" || user.subscriptionType === "pro") && 

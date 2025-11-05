@@ -11,6 +11,7 @@ interface Plan {
   credits: number | string;
   stripePriceId: string;
   highlighted: boolean;
+  planType?: string; // Type interne pour Stripe
 }
 
 interface PricingCardProps {
@@ -36,7 +37,7 @@ export default function PricingCard({ plan, currentPlan, isLoggedIn }: PricingCa
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           priceId: plan.stripePriceId,
-          planType: plan.id,
+          planType: plan.planType || plan.id, // Use planType if defined, else fallback to id
         }),
       });
 
@@ -122,9 +123,9 @@ export default function PricingCard({ plan, currentPlan, isLoggedIn }: PricingCa
 
       <button
         onClick={handleSubscribe}
-        disabled={loading || isCurrentPlan}
+        disabled={loading || (isCurrentPlan && plan.id !== "pack_credits")}
         className={`w-full py-4 px-6 rounded-xl font-semibold text-lg transition-all ${
-          isCurrentPlan
+          (isCurrentPlan && plan.id !== "pack_credits")
             ? "bg-slate-200 text-slate-500 cursor-not-allowed"
             : plan.highlighted
             ? "bg-linear-to-r from-[#7BB5D8] to-[#E0BBE4] hover:from-[#6AA5C8] hover:to-[#D0ABD4] text-white shadow-lg hover:shadow-xl"
@@ -151,16 +152,16 @@ export default function PricingCard({ plan, currentPlan, isLoggedIn }: PricingCa
             </svg>
             Chargement...
           </span>
-        ) : isCurrentPlan ? (
+        ) : (isCurrentPlan && plan.id !== "pack_credits") ? (
           "Plan actuel"
-        ) : plan.id === "day_pass" ? (
-          "Acheter le pack"
+        ) : plan.id === "pack_credits" ? (
+          "Acheter 50 crédits"
         ) : (
           "S'abonner maintenant"
         )}
       </button>
 
-      {!isCurrentPlan && plan.id !== "day_pass" && (
+      {plan.id !== "pack_credits" && !isCurrentPlan && (
         <p className="text-center text-sm text-slate-500 mt-4">
           Annuler à tout moment
         </p>
