@@ -2,7 +2,7 @@ import Link from "next/link"
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-linear-to-br from-[#FAFBFC] via-[#F0F4F8] to-[#E8EEF5]">
+    <div className="min-h-full bg-linear-to-br from-[#FAFBFC] via-[#F0F4F8] to-[#E8EEF5]">
 
       {/* Hero Section */}
       <section className="mx-auto max-w-6xl px-4 pt-20 pb-16 animate-fade-in">
