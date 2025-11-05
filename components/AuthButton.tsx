@@ -93,11 +93,19 @@ export default function AuthButton() {
   }
 
   return (
-    <Link
-      href="/login"
-      className="px-6 py-3 rounded-xl gradient-blue text-white text-sm font-bold shadow-lg hover:shadow-xl hover:brightness-110 transition-all duration-300"
-    >
-      Se connecter
-    </Link>
+    <div className="flex items-center gap-4">
+      <Link
+        href="/billing"
+        className="text-slate-700 hover:text-[#7BB5D8] transition-colors font-medium"
+      >
+        Plans
+      </Link>
+      <Link
+        href="/login"
+        className="px-6 py-3 rounded-xl gradient-blue text-white text-sm font-bold shadow-lg hover:shadow-xl hover:brightness-110 transition-all duration-300"
+      >
+        Se connecter
+      </Link>
+    </div>
   )
 }

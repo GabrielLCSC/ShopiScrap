@@ -16,12 +16,19 @@ interface Plan {
 interface PricingCardProps {
   plan: Plan;
   currentPlan: string;
+  isLoggedIn: boolean;
 }
 
-export default function PricingCard({ plan, currentPlan }: PricingCardProps) {
+export default function PricingCard({ plan, currentPlan, isLoggedIn }: PricingCardProps) {
   const [loading, setLoading] = useState(false);
 
   const handleSubscribe = async () => {
+    // Redirect to register if not logged in
+    if (!isLoggedIn) {
+      window.location.href = "/register?redirect=/billing";
+      return;
+    }
+
     setLoading(true);
     try {
       const response = await fetch("/api/stripe/create-checkout", {

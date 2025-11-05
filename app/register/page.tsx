@@ -1,17 +1,19 @@
 "use client"
 
-import { useState } from "react"
+import { useState, Suspense } from "react"
 import { signIn } from "next-auth/react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
 
-export default function RegisterPage() {
+function RegisterForm() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [name, setName] = useState("")
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const redirectTo = searchParams.get("redirect") || "/dashboard"
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -43,7 +45,7 @@ export default function RegisterPage() {
         throw new Error("Erreur lors de la connexion")
       }
 
-      router.push("/dashboard")
+      router.push(redirectTo)
       router.refresh()
     } catch (err) {
       setError(err instanceof Error ? err.message : "Une erreur est survenue")
@@ -55,7 +57,7 @@ export default function RegisterPage() {
   const handleGoogleSignIn = async () => {
     setLoading(true)
     try {
-      await signIn("google", { callbackUrl: "/dashboard" })
+      await signIn("google", { callbackUrl: redirectTo })
     } catch {
       setError("Erreur lors de la connexion avec Google")
       setLoading(false)
@@ -189,6 +191,18 @@ export default function RegisterPage() {
       <div className="fixed top-20 left-10 w-72 h-72 bg-[#A8D8EA]/20 rounded-full blur-3xl pointer-events-none animate-float" style={{animationDelay: '0s', animationDuration: '8s'}}></div>
       <div className="fixed bottom-20 right-10 w-72 h-72 bg-[#E0BBE4]/20 rounded-full blur-3xl pointer-events-none animate-float" style={{animationDelay: '2s', animationDuration: '10s'}}></div>
     </div>
+  )
+}
+
+export default function RegisterPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-full bg-linear-to-br from-[#FAFBFC] via-[#F0F4F8] to-[#E8EEF5] flex items-center justify-center">
+        <div className="text-slate-600">Chargement...</div>
+      </div>
+    }>
+      <RegisterForm />
+    </Suspense>
   )
 }
 

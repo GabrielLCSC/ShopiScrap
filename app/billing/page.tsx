@@ -1,5 +1,4 @@
 import { auth } from "@/auth";
-import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import PricingCard from "./PricingCard";
 
@@ -11,25 +10,21 @@ export const metadata = {
 export default async function BillingPage() {
   const session = await auth();
 
-  if (!session?.user?.email) {
-    redirect("/");
-  }
-
-  const user = await prisma.user.findUnique({
-    where: { email: session.user.email },
-    select: {
-      id: true,
-      credits: true,
-      subscriptionType: true,
-      subscriptionEndDate: true,
-      monthlyUsed: true,
-      monthlyQuota: true,
-      totalCreditsUsed: true,
-    },
-  });
-
-  if (!user) {
-    redirect("/");
+  let user = null;
+  
+  if (session?.user?.email) {
+    user = await prisma.user.findUnique({
+      where: { email: session.user.email },
+      select: {
+        id: true,
+        credits: true,
+        subscriptionType: true,
+        subscriptionEndDate: true,
+        monthlyUsed: true,
+        monthlyQuota: true,
+        totalCreditsUsed: true,
+      },
+    });
   }
 
   const plans = [
@@ -117,52 +112,72 @@ export default async function BillingPage() {
           </p>
         </div>
 
-        {/* Current Status */}
-        <div className="glass rounded-2xl p-6 mb-12 max-w-2xl mx-auto border border-white/30 animate-scale-in">
-          <h3 className="text-xl font-semibold text-slate-900 mb-4">Votre compte</h3>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="text-center p-4 bg-white/50 rounded-lg border border-white/30">
-              <p className="text-sm text-slate-600 mb-1">Plan actuel</p>
-              <p className="text-2xl font-bold text-blue-600 capitalize">
-                {user.subscriptionType.replace("_", " ")}
-              </p>
+        {/* Current Status - Only for logged in users */}
+        {user && (
+          <div className="glass rounded-2xl p-6 mb-12 max-w-2xl mx-auto border border-white/30 animate-scale-in">
+            <h3 className="text-xl font-semibold text-slate-900 mb-4">Votre compte</h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="text-center p-4 bg-white/50 rounded-lg border border-white/30">
+                <p className="text-sm text-slate-600 mb-1">Plan actuel</p>
+                <p className="text-2xl font-bold text-blue-600 capitalize">
+                  {user.subscriptionType.replace("_", " ")}
+                </p>
+              </div>
+
+              <div className="text-center p-4 bg-white/50 rounded-lg border border-white/30">
+                <p className="text-sm text-slate-600 mb-1">Disponibles</p>
+                <p className="text-2xl font-bold text-green-600">
+                  {user.subscriptionType === "pro" ? "∞" : 
+                   user.subscriptionType === "monthly" ? `${user.monthlyQuota - user.monthlyUsed}` :
+                   user.credits}
+                </p>
+              </div>
+
+              <div className="text-center p-4 bg-white/50 rounded-lg border border-white/30">
+                <p className="text-sm text-slate-600 mb-1">Total utilisé</p>
+                <p className="text-2xl font-bold text-slate-900">
+                  {user.totalCreditsUsed}
+                </p>
+              </div>
             </div>
 
-            <div className="text-center p-4 bg-white/50 rounded-lg border border-white/30">
-              <p className="text-sm text-slate-600 mb-1">Disponibles</p>
-              <p className="text-2xl font-bold text-green-600">
-                {user.subscriptionType === "pro" ? "∞" : 
-                 user.subscriptionType === "monthly" ? `${user.monthlyQuota - user.monthlyUsed}` :
-                 user.credits}
-              </p>
-            </div>
-
-            <div className="text-center p-4 bg-white/50 rounded-lg border border-white/30">
-              <p className="text-sm text-slate-600 mb-1">Total utilisé</p>
-              <p className="text-2xl font-bold text-slate-900">
-                {user.totalCreditsUsed}
-              </p>
-            </div>
+            {user.subscriptionEndDate && new Date(user.subscriptionEndDate) > new Date() && (
+              <div className="mt-4 p-3 bg-blue-50 rounded-lg text-center">
+                <p className="text-sm text-blue-800">
+                  {user.subscriptionType === "day_pass" ? "Day Pass" : "Abonnement"} actif jusqu&apos;au{" "}
+                  <span className="font-semibold">
+                    {new Date(user.subscriptionEndDate).toLocaleDateString("fr-FR", {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </span>
+                </p>
+              </div>
+            )}
           </div>
+        )}
 
-          {user.subscriptionEndDate && new Date(user.subscriptionEndDate) > new Date() && (
-            <div className="mt-4 p-3 bg-blue-50 rounded-lg text-center">
-              <p className="text-sm text-blue-800">
-                {user.subscriptionType === "day_pass" ? "Day Pass" : "Abonnement"} actif jusqu&apos;au{" "}
-                <span className="font-semibold">
-                  {new Date(user.subscriptionEndDate).toLocaleDateString("fr-FR", {
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                </span>
-              </p>
-            </div>
-          )}
-        </div>
+        {/* CTA for non-logged users */}
+        {!user && (
+          <div className="glass rounded-2xl p-8 mb-12 max-w-2xl mx-auto border border-white/30 animate-scale-in text-center">
+            <h3 className="text-2xl font-bold text-slate-900 mb-3">
+              Créez un compte pour commencer
+            </h3>
+            <p className="text-slate-600 mb-6">
+              3 extractions gratuites dès l&apos;inscription, sans carte bancaire
+            </p>
+            <a
+              href="/register?redirect=/billing"
+              className="inline-block px-8 py-4 rounded-xl gradient-blue text-white font-semibold shadow-lg hover:shadow-xl hover:brightness-110 transition-all duration-300"
+            >
+              S&apos;inscrire gratuitement
+            </a>
+          </div>
+        )}
 
         {/* Free Tier Info */}
         <div className="glass bg-linear-to-r from-green-50/50 to-emerald-50/50 border border-green-200/50 rounded-2xl p-6 mb-8 max-w-2xl mx-auto animate-scale-in">
@@ -187,7 +202,8 @@ export default async function BillingPage() {
             <PricingCard
               key={plan.id}
               plan={plan}
-              currentPlan={user.subscriptionType}
+              currentPlan={user?.subscriptionType || "free"}
+              isLoggedIn={!!user}
             />
           ))}
         </div>
