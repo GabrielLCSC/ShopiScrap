@@ -106,12 +106,13 @@ function RegisterForm() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label htmlFor="name" className="block text-sm font-medium text-slate-700 mb-2">
-              Nom (optionnel)
+              Nom
             </label>
             <input
               id="name"
               type="text"
               value={name}
+              required
               onChange={(e) => setName(e.target.value)}
               className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#7BB5D8] focus:outline-none transition-colors"
               placeholder="Votre nom"
