@@ -88,7 +88,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
   }
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
@@ -96,7 +96,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
       />
 
       {/* Modal */}
-      <div className="relative glass rounded-3xl p-8 max-w-md w-full mx-4 border border-white/30 animate-scale-in">
+      <div className="relative glass rounded-3xl p-8 max-w-md w-full border border-white/30 animate-scale-in max-h-[90vh] overflow-y-auto">
         {/* Close button */}
         <button
           onClick={onClose}
