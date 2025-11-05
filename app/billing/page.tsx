@@ -161,23 +161,6 @@ export default async function BillingPage() {
           </div>
         )}
 
-        {/* CTA for non-logged users */}
-        {!user && (
-          <div className="glass rounded-2xl p-8 mb-12 max-w-2xl mx-auto border border-white/30 animate-scale-in text-center">
-            <h3 className="text-2xl font-bold text-slate-900 mb-3">
-              Créez un compte pour commencer
-            </h3>
-            <p className="text-slate-600 mb-6">
-              3 extractions gratuites dès l&apos;inscription, sans carte bancaire
-            </p>
-            <a
-              href="/register?redirect=/billing"
-              className="inline-block px-8 py-4 rounded-xl gradient-blue text-white font-semibold shadow-lg hover:shadow-xl hover:brightness-110 transition-all duration-300"
-            >
-              S&apos;inscrire gratuitement
-            </a>
-          </div>
-        )}
 
         {/* Free Tier Info */}
         <div className="glass bg-linear-to-r from-green-50/50 to-emerald-50/50 border border-green-200/50 rounded-2xl p-6 mb-8 max-w-2xl mx-auto animate-scale-in">
@@ -197,7 +180,7 @@ export default async function BillingPage() {
         </div>
 
         {/* Pricing Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12 animate-fade-in">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 my-16 animate-fade-in">
           {plans.map((plan) => (
             <PricingCard
               key={plan.id}

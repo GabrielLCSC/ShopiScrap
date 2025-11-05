@@ -96,7 +96,7 @@ export default function AuthButton() {
     <div className="flex items-center gap-4">
       <Link
         href="/billing"
-        className="text-slate-700 hover:text-[#7BB5D8] transition-colors font-medium"
+        className="text-slate-700 hover:text-[#7BB5D8] transition-colors mr-4 font-medium"
       >
         Plans
       </Link>
