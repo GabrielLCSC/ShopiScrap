@@ -20,9 +20,14 @@ model User {
   email         String    @unique
   emailVerified DateTime?
   image         String?
+  
+  // Authentification credentials (email/password)
+  hashedPassword String?   // Null si connexion via OAuth uniquement
+  
   accounts      Account[]
   sessions      Session[]
   scrapeJobs    ScrapeJob[]
+  passwordResetTokens PasswordResetToken[]
   
   // Système de crédits et abonnements
   credits       Int       @default(3) // Crédits disponibles (free tier ou day pass)
@@ -42,6 +47,8 @@ model User {
   
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  
+  @@index([email])
 }
 
 model Account {
@@ -81,6 +88,19 @@ model VerificationToken {
   expires    DateTime
 
   @@id([identifier, token])
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String   @unique
+  expires   DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([token])
+  @@index([userId])
 }
 
 // ============================================

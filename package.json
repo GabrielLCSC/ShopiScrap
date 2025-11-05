@@ -19,6 +19,8 @@
     "@auth/prisma-adapter": "^2.11.1",
     "@prisma/client": "^6.18.0",
     "@stripe/stripe-js": "^8.2.0",
+    "@types/bcryptjs": "^2.4.6",
+    "bcryptjs": "^3.0.3",
     "cheerio": "^1.1.2",
     "dotenv": "^17.2.3",
     "next": "16.0.1",

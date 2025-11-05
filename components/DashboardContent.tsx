@@ -1,9 +1,10 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { useSession, signIn } from "next-auth/react"
+import { useSession } from "next-auth/react"
 import Image from "next/image"
 import ExportDropdown from "./ExportDropdown"
+import AuthModal from "./AuthModal"
 
 interface ScrapedData {
   id: string
@@ -29,6 +30,7 @@ export default function DashboardContent() {
   const [subscriptionType, setSubscriptionType] = useState<string>("free")
   const [trialRemaining, setTrialRemaining] = useState<number | null>(null)
   const [isTrial, setIsTrial] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const resultRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -219,14 +221,16 @@ export default function DashboardContent() {
     ]
 
     // Extraire les options de variants (ex: "Taille: S, M, L / Couleur: Rouge, Bleu")
-    const variantOptions = rawData.options?.map((opt: any) => 
-      `${opt.name}: ${opt.values?.join(', ')}`
-    ).join(' / ') || ""
+    const variantOptions = rawData.options?.map((opt: unknown) => {
+      const option = opt as { name?: string; values?: string[] }
+      return `${option.name || ''}: ${option.values?.join(', ') || ''}`
+    }).join(' / ') || ""
 
     // Formater les variants de manière lisible
-    const variantsDetails = exportData.variants?.map((v: any) => 
-      `[${v.title}] Prix: ${v.price || 'N/A'}, SKU: ${v.sku || 'N/A'}, Stock: ${v.available ? 'Oui' : 'Non'}`
-    ).join(' | ') || ""
+    const variantsDetails = exportData.variants?.map((v: unknown) => {
+      const variant = v as { title?: string; price?: string; sku?: string; available?: boolean }
+      return `[${variant.title || 'N/A'}] Prix: ${variant.price || 'N/A'}, SKU: ${variant.sku || 'N/A'}, Stock: ${variant.available ? 'Oui' : 'Non'}`
+    }).join(' | ') || ""
 
     // Créer la ligne de données
     const row = [
@@ -293,7 +297,7 @@ export default function DashboardContent() {
                 ⚠️ <strong>Sans connexion</strong> : vos résultats ne seront pas sauvegardés et vous n&apos;aurez pas accès à l&apos;historique.
               </p>
               <button
-                onClick={() => signIn("google")}
+                onClick={() => setIsModalOpen(true)}
                 className="px-6 py-3 rounded-xl gradient-blue text-white font-bold shadow-lg hover:shadow-xl hover:brightness-110 transition-all duration-300 flex items-center gap-2"
               >
                 <svg className="h-5 w-5" viewBox="0 0 24 24">
@@ -332,7 +336,7 @@ export default function DashboardContent() {
                    "Crédits gratuits"}
                 </p>
                 {subscriptionType !== "free" && (
-                  <span className="px-2 py-0.5 rounded-full bg-gradient-to-r from-[#7BB5D8] to-[#E0BBE4] text-white text-xs font-semibold">
+                  <span className="px-2 py-0.5 rounded-full bg-linear-to-r from-[#7BB5D8] to-[#E0BBE4] text-white text-xs font-semibold">
                     {subscriptionType === "pro" ? "PRO" : 
                      subscriptionType === "monthly" ? "MONTHLY" : 
                      "DAY PASS"}
@@ -479,7 +483,7 @@ export default function DashboardContent() {
                 <p className="text-sm text-center text-gray-700">
                   ⚠️ <strong>Mode essai</strong> : Ce résultat ne sera pas sauvegardé. 
                   <button
-                    onClick={() => signIn("google")}
+                    onClick={() => setIsModalOpen(true)}
                     className="ml-2 text-[#7BB5D8] font-bold hover:underline"
                   >
                     Connectez-vous pour sauvegarder
@@ -614,6 +618,9 @@ export default function DashboardContent() {
           </div>
         )
       })()}
+
+      {/* Modal de connexion */}
+      <AuthModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   )
 }
