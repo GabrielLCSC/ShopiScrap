@@ -77,15 +77,12 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   const now = new Date();
 
   if (planType === "day_pass") {
-    // Day Pass : 50 crédits valables 24h
-    const endDate = new Date(now.getTime() + 24 * 60 * 60 * 1000);
-
+    // Day Pass : 50 crédits persistants (pas d'expiration)
     await prisma.user.update({
       where: { id: userId },
       data: {
-        subscriptionType: "day_pass",
-        credits: 50,
-        subscriptionEndDate: endDate,
+        credits: { increment: 50 }, // Ajoute 50 crédits au total existant
+        // subscriptionType reste "free" ou ce qu'il était
       },
     });
   } else if (planType === "monthly") {

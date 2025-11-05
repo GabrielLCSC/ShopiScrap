@@ -205,20 +205,9 @@ export async function POST(request: NextRequest) {
 
     const now = new Date()
 
-    // 1. Vérifier si Day Pass est expiré
-    if (user.subscriptionType === "day_pass" && user.subscriptionEndDate && new Date(user.subscriptionEndDate) < now) {
-      user = await prisma.user.update({
-        where: { id: user.id },
-        data: {
-          subscriptionType: "free",
-          subscriptionEndDate: null,
-          credits: 3,
-          lastFreeReset: now,
-        }
-      })
-    }
+    // Day Pass n'expire plus - les crédits sont persistants
 
-    // 2. Vérifier si abonnement (monthly/pro) est expiré
+    // 1. Vérifier si abonnement (monthly/pro) est expiré
     if ((user.subscriptionType === "monthly" || user.subscriptionType === "pro") && 
         user.subscriptionEndDate && new Date(user.subscriptionEndDate) < now) {
       user = await prisma.user.update({
@@ -272,12 +261,7 @@ export async function POST(request: NextRequest) {
     switch (user.subscriptionType) {
       case "free":
         canScrape = user.credits > 0
-        errorMessage = "Vous n'avez plus de crédits gratuits. Choisissez un plan payant pour continuer."
-        break
-
-      case "day_pass":
-        canScrape = user.credits > 0
-        errorMessage = "Vous avez épuisé votre Day Pass. Achetez un nouveau pass ou un abonnement."
+        errorMessage = "Vous n'avez plus de crédits. Achetez un pack de crédits ou choisissez un abonnement."
         break
 
       case "monthly":
@@ -307,7 +291,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 6. Déduire selon le plan
-    if (user.subscriptionType === "free" || user.subscriptionType === "day_pass") {
+    if (user.subscriptionType === "free") {
       await prisma.user.update({
         where: { id: user.id },
         data: {

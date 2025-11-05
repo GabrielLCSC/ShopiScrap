@@ -30,17 +30,17 @@ export default async function BillingPage() {
   const plans = [
     {
       id: "day_pass",
-      name: "Day Pass",
+      name: "Pack 50 Crédits",
       price: "4€",
-      period: "24h",
+      period: "one-time",
       features: [
         "50 extractions",
-        "Valable 24h",
+        "Crédits persistants (jamais expirés)",
         "Parfait pour un besoin ponctuel",
         "Accès immédiat",
       ],
       credits: 50,
-      stripePriceId: process.env.STRIPE_DAY_PASS_PRICE_ID!,
+      stripePriceId: process.env.STRIPE_PACK_CREDITS_PRICE_ID!,
       highlighted: false,
     },
     {
