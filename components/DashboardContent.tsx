@@ -30,14 +30,21 @@ export default function DashboardContent() {
   const [subscriptionType, setSubscriptionType] = useState<string>("free")
   const [trialRemaining, setTrialRemaining] = useState<number | null>(null)
   const [isTrial, setIsTrial] = useState(false)
+  const [creditsLoading, setCreditsLoading] = useState(true)
   const resultRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (session) {
-      fetchCredits()
-    } else {
-      fetchTrialRemaining()
+    const loadData = async () => {
+      if (session) {
+        await fetchCredits()
+      } else {
+        await fetchTrialRemaining()
+      }
+      
+      setCreditsLoading(false)
     }
+    
+    loadData()
   }, [session])
 
   // Recharger les crédits quand l'utilisateur revient sur la page (ex: retour de Stripe)
@@ -286,9 +293,22 @@ export default function DashboardContent() {
 
   return (
     <div className="space-y-8">
-      {/* Disclaimer pour non-connectés */}
-      {!session && trialRemaining !== null && (
-        <div className="glass glass-hover rounded-3xl p-6 border-2 border-[#A8D8EA] animate-slide-in">
+      {/* Badge de crédits / Disclaimer - Skeleton ou contenu */}
+      {creditsLoading ? (
+        <div className="glass rounded-3xl p-6 animate-pulse min-h-[140px]">
+          <div className="flex items-center justify-between">
+            <div className="flex-1">
+              <div className="h-5 bg-gray-200 rounded w-64 mb-4"></div>
+              <div className="h-10 bg-gray-200 rounded w-32"></div>
+            </div>
+            <div className="h-12 bg-gray-200 rounded w-24"></div>
+          </div>
+        </div>
+      ) : (
+        <>
+          {/* Disclaimer pour non-connectés */}
+          {!session && trialRemaining !== null && (
+            <div className="glass glass-hover rounded-3xl p-6 border-2 border-[#A8D8EA] animate-slide-in">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
             {/* Info + CTA */}
             <div className="flex-1">
@@ -320,11 +340,11 @@ export default function DashboardContent() {
             </div>
           </div>
         </div>
-      )}
+          )}
 
-      {/* Badge de crédits (connectés uniquement) */}
-      {session && credits !== null && (
-        <div className="glass glass-hover rounded-3xl p-6 animate-slide-in">
+          {/* Badge de crédits (connectés uniquement) */}
+          {session && credits !== null && (
+            <div className="glass glass-hover rounded-3xl p-6 animate-slide-in">
           <div className="flex items-center justify-between">
             <div>
               <div className="flex items-center gap-2 mb-1">
@@ -368,7 +388,10 @@ export default function DashboardContent() {
             </div>
           )}
         </div>
+          )}
+        </>
       )}
+
       {/* Formulaire de scraping */}
       <div className="glass glass-hover rounded-3xl p-8 animate-fade-in" style={{ animationDelay: '0.1s' }}>
         <h2 className="text-2xl font-bold text-gray-800 mb-6">
