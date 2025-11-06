@@ -26,10 +26,10 @@ export default function Footer() {
               Accueil
             </Link>
             <Link 
-              href="/dashboard" 
+              href="/scraping" 
               className="text-slate-600 hover:text-[#7BB5D8] transition-colors font-medium"
             >
-              Dashboard
+              Scraping
             </Link>
             <Link 
               href="/billing" 
@@ -38,7 +38,7 @@ export default function Footer() {
               Tarifs
             </Link>
             <Link 
-              href="/dashboard/history" 
+              href="/scraping/history" 
               className="text-slate-600 hover:text-[#7BB5D8] transition-colors font-medium"
             >
               Historique

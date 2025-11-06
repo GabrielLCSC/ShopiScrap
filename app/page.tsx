@@ -30,7 +30,7 @@ export default function Home() {
 
           {/* CTA */}
           <Link 
-            href="/dashboard"
+            href="/scraping"
             className="inline-flex items-center gap-2 glass px-8 py-4 rounded-2xl text-lg font-semibold bg-linear-to-r from-[#7BB5D8] to-[#E0BBE4] bg-clip-text text-transparent hover:brightness-110 transition-all duration-300 shadow-lg hover:shadow-xl border-2 border-[#7BB5D8]/30 animate-float"
           >
             <span className="bg-linear-to-r from-[#7BB5D8] to-[#E0BBE4] bg-clip-text text-transparent">
@@ -153,7 +153,7 @@ export default function Home() {
           <div className="flex justify-center pb-14">
             {/* CTA */}
           <Link 
-            href="/dashboard"
+            href="/scraping"
             className="inline-flex items-center gap-2 glass px-8 py-4 rounded-2xl text-lg font-semibold bg-linear-to-r from-[#7BB5D8] to-[#E0BBE4] bg-clip-text text-transparent hover:brightness-110 transition-all duration-300 shadow-lg hover:shadow-xl border-2 border-[#7BB5D8]/30 animate-float"
           >
             <span className="bg-linear-to-r from-[#7BB5D8] to-[#E0BBE4] bg-clip-text text-transparent">

@@ -62,7 +62,7 @@ export default function AuthButton() {
           <div className="py-2">
             {/* Historique */}
             <Link
-              href="/dashboard/history"
+              href="/scraping/history"
               className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all duration-200 group"
             >
               <span className="font-medium">Historique</span>

@@ -3,7 +3,7 @@ import DashboardContent from "@/components/DashboardContent"
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Dashboard - Scraper des produits Shopify",
+  title: "Scraping - Scraper des produits Shopify",
   description: "Scrapez des pages produits Shopify et extrayez toutes les données : titre, prix, images, variants, métadonnées SEO. Export JSON en un clic.",
 }
 

@@ -25,7 +25,7 @@ export default async function HistoryPage() {
         {/* Breadcrumb */}
         <div className="mb-8 animate-fade-in">
           <a 
-            href="/dashboard" 
+            href="/scraping" 
             className="inline-flex items-center gap-2 text-slate-600 hover:text-[#7BB5D8] transition-colors group"
           >
             <svg 
@@ -41,7 +41,7 @@ export default async function HistoryPage() {
                 d="M15 19l-7-7 7-7" 
               />
             </svg>
-            Dashboard
+            Scraping
           </a>
         </div>
 

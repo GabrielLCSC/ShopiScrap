@@ -213,7 +213,7 @@ export default function HistoryList() {
           Aucun scraping pour le moment
         </p>
           <a
-            href="/dashboard"
+            href="/scraping"
             className="inline-block mt-4 px-6 py-3 rounded-xl gradient-blue text-white font-semibold hover:shadow-xl hover:brightness-110 transition-all duration-300"
           >
             Lancer votre premier scraping →

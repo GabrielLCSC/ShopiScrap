@@ -60,7 +60,7 @@ export async function POST(request: Request) {
           quantity: 1,
         },
       ],
-      success_url: `${process.env.NEXTAUTH_URL}/dashboard`,
+      success_url: `${process.env.NEXTAUTH_URL}/scraping`,
       cancel_url: `${process.env.NEXTAUTH_URL}/billing`,
       metadata: {
         userId: user.id,
