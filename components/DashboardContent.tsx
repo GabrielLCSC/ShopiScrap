@@ -41,7 +41,8 @@ export default function DashboardContent() {
         await fetchTrialRemaining()
       }
       
-      setCreditsLoading(false)
+      // Petit délai pour s'assurer que tout est stable
+      setTimeout(() => setCreditsLoading(false), 200)
     }
     
     loadData()
@@ -291,10 +292,10 @@ export default function DashboardContent() {
     URL.revokeObjectURL(urlBlob)
   }
 
-  return (
-    <div className="space-y-8">
-      {/* Badge de crédits / Disclaimer - Skeleton ou contenu */}
-      {creditsLoading ? (
+  // Ne rien afficher tant que les données ne sont pas chargées
+  if (creditsLoading) {
+    return (
+      <div className="space-y-8">
         <div className="glass rounded-3xl p-6 animate-pulse min-h-[140px]">
           <div className="flex items-center justify-between">
             <div className="flex-1">
@@ -304,10 +305,25 @@ export default function DashboardContent() {
             <div className="h-12 bg-gray-200 rounded w-24"></div>
           </div>
         </div>
-      ) : (
-        <>
-          {/* Disclaimer pour non-connectés */}
-          {!session && trialRemaining !== null && (
+        <div className="glass rounded-3xl p-8 min-h-[380px] animate-pulse">
+          <div className="h-8 bg-gray-200 rounded w-48 mb-6"></div>
+          <div className="space-y-6">
+            <div>
+              <div className="h-5 bg-gray-200 rounded w-48 mb-3"></div>
+              <div className="h-14 bg-gray-200 rounded-2xl"></div>
+              <div className="h-4 bg-gray-200 rounded w-64 mt-2"></div>
+            </div>
+            <div className="h-14 bg-gray-200 rounded-2xl"></div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="space-y-8">
+      {/* Disclaimer pour non-connectés */}
+      {!session && trialRemaining !== null && (
             <div className="glass glass-hover rounded-3xl p-6 border-2 border-[#A8D8EA] animate-slide-in">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
             {/* Info + CTA */}
@@ -340,11 +356,11 @@ export default function DashboardContent() {
             </div>
           </div>
         </div>
-          )}
+      )}
 
-          {/* Badge de crédits (connectés uniquement) */}
-          {session && credits !== null && (
-            <div className="glass glass-hover rounded-3xl p-6 animate-slide-in">
+      {/* Badge de crédits (connectés uniquement) */}
+      {session && credits !== null && (
+        <div className="glass glass-hover rounded-3xl p-6 animate-slide-in">
           <div className="flex items-center justify-between">
             <div>
               <div className="flex items-center gap-2 mb-1">
@@ -388,8 +404,6 @@ export default function DashboardContent() {
             </div>
           )}
         </div>
-          )}
-        </>
       )}
 
       {/* Formulaire de scraping */}
