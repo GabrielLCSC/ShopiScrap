@@ -73,7 +73,7 @@ export default function AuthButton() {
               href="/billing"
               className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all duration-200 group"
             >
-              <span className="font-medium">Plans</span>
+              <span className="font-medium">Tarifs</span>
             </Link>
 
             {/* Séparateur */}
@@ -98,7 +98,7 @@ export default function AuthButton() {
         href="/billing"
         className="text-slate-700 hover:text-[#7BB5D8] transition-colors mr-4 font-medium"
       >
-        Plans
+        Tarifs
       </Link>
       <Link
         href="/login"
