@@ -50,6 +50,12 @@ export default function Footer() {
                 Historique
               </Link>
             )}
+            <a 
+              href="mailto:gabriel.dautreppe@gmail.com" 
+              className="text-slate-600 hover:text-[#7BB5D8] transition-colors font-medium"
+            >
+              Support
+            </a>
           </nav>
         </div>
 
