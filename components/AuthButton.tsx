@@ -60,6 +60,15 @@ export default function AuthButton() {
           }`}
         >
           <div className="py-2">
+
+            {/* Scraping */}
+            <Link
+              href="/dashboard"
+              className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all duration-200 group"
+            >
+              <span className="font-medium">Scraping</span>
+            </Link>
+
             {/* Historique */}
             <Link
               href="/scraping/history"
