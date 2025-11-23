@@ -71,15 +71,19 @@ export async function GET() {
     }
 
     // Vérifier si abonnement (monthly/pro) est expiré
+    // Ne pas écraser les crédits existants, seulement changer le type d'abonnement
     if ((user.subscriptionType === "monthly" || user.subscriptionType === "pro") && 
         user.subscriptionEndDate && new Date(user.subscriptionEndDate) < now) {
+      // Si l'utilisateur a moins de 3 crédits, lui donner 3 crédits minimum
+      // Sinon, garder ses crédits existants
+      const minCredits = user.credits < 3 ? 3 : user.credits
       user = await prisma.user.update({
         where: { email: session.user.email },
         data: {
           subscriptionType: "free",
           subscriptionEndDate: null,
           stripeSubscriptionId: null,
-          credits: 3,
+          credits: minCredits,
           lastFreeReset: now,
         },
         select: {
@@ -121,30 +125,28 @@ export async function GET() {
       }
     }
 
-    // Reset quotidien pour plan Free
-    if (user.subscriptionType === "free") {
-      const lastReset = new Date(user.lastFreeReset)
-      const hoursSinceReset = (now.getTime() - lastReset.getTime()) / (1000 * 60 * 60)
-      
-      if (hoursSinceReset >= 24) {
-        user = await prisma.user.update({
-          where: { email: session.user.email },
-          data: {
-            credits: 3,
-            lastFreeReset: now,
-          },
-          select: {
-            credits: true,
-            lastFreeReset: true,
-            totalCreditsUsed: true,
-            subscriptionType: true,
-            subscriptionEndDate: true,
-            monthlyQuota: true,
-            monthlyUsed: true,
-            lastMonthlyReset: true,
-          }
-        })
-      }
+    // Reset quotidien - Ajouter 3 crédits quotidiens pour TOUS les utilisateurs (peu importe l'abonnement)
+    const lastReset = new Date(user.lastFreeReset)
+    const hoursSinceReset = (now.getTime() - lastReset.getTime()) / (1000 * 60 * 60)
+    
+    if (hoursSinceReset >= 24) {
+      user = await prisma.user.update({
+        where: { email: session.user.email },
+        data: {
+          credits: { increment: 3 },
+          lastFreeReset: now,
+        },
+        select: {
+          credits: true,
+          lastFreeReset: true,
+          totalCreditsUsed: true,
+          subscriptionType: true,
+          subscriptionEndDate: true,
+          monthlyQuota: true,
+          monthlyUsed: true,
+          lastMonthlyReset: true,
+        }
+      })
     }
 
     // Calculer les crédits disponibles selon le plan
